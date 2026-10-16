@@ -65,6 +65,11 @@ generation needs generation:write, account entitlement, explicit paid-work
 authorization and a numeric ceiling covering the whole pipeline. Existing
 authorization remains valid within its scope and ceiling; ask before exceeding
 it. Credit cost remains unknown without billing evidence.
+An error_code of insufficient_credits or an upgrade_url on any ForgeGUI result
+means the account's ForgeGUI balance ran out, not a provider fault: stop every
+paid call, tell the user in one sentence that their ForgeGUI account is out of
+credits with https://forgegui.com/plans to upgrade, report how many planned
+assets remain unbuilt, and never reopen the same asset under a new request_id.
 
 Reuse approved references before spending. Only pass owned image references in
 fields supported by the live schema; a pasted image or URL is not a registered

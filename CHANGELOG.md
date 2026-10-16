@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.9.5 — production
+
+- When any ForgeGUI result carries `error_code: insufficient_credits` or an `upgrade_url`, the builder skill (Claude and Codex) stops every paid call, tells the user in one sentence that their ForgeGUI account is out of credits, gives them https://forgegui.com/plans to upgrade, reports how many planned assets remain unbuilt, and never opens a new `request_id` for the same asset. Before this change rule 5 only said to stop on insufficient credits, and an account that ran out mid-job reached the agent as an unknown provider outcome, so it retried the same asset under new request IDs (FOR-769).
+- Pairs with the ForgeGUI server change that ends an out-of-credits job as `failed` with `error_code: insufficient_credits`, the plans-page message and `upgrade_url`, and refuses a claim below the job's minimum cost. Connector sessions get that guidance from the server instructions; this release carries it into the installed skill.
+- Guidance only: no scripts, MCP endpoint or tool contract changes. The OpenAI staging preview keeps its `1.9.0-beta.1` label.
+
 ## 1.9.4 — production
 
 - ForgeGUI 3D is now the default for every object the player sees whenever a generation route exists, including small props, furniture and background set dressing. Before this change the default covered identity assets and close-up props, the skill called generating every scene object "the expensive failure", and its plan example built a campfire log from Roblox parts.
