@@ -73,6 +73,10 @@ assets remain unbuilt, and reopen the asset under a new request_id only after
 the user confirms credits were added: the refused job is settled and not
 retryable, while an outcome_unknown job is never regenerated.
 
+When the live server exposes generation_list, check the account's own earlier
+jobs with it (free, newest first) before paying again or asking for job IDs;
+its artifact_ref values feed artifact_publish, generation_rig_3d and the
+reference fields. It lists ForgeMCP jobs only and omits file URLs.
 Reuse approved references before spending. Only pass owned image references in
 fields supported by the live schema; a pasted image or URL is not a registered
 reference. Retain style/version pins and distinguish job, asset, artifact and

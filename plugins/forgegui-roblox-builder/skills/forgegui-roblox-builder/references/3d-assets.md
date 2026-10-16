@@ -185,8 +185,11 @@ For the preferred inspect/transform-before-publication path, follow
 `preparation-installation.md`: generate/reuse a direct artifact, call
 `asset_prepare`, inspect `result.prepared_bundle`, and pass the **prepared Model
 member** to `artifact_publish`. This supports an existing owned direct result or
-remesh without regeneration when the account's routes are usable. Do not apply
-the baked transform a second time in Studio. The routes below remain alternatives
+remesh without regeneration when the account's routes are usable. When the
+ledger has no `artifact_ref` for an earlier model, find it with `generation_list`
+(`tool: ["generation_model_3d"]` plus `query` or a date window) instead of asking
+the user for job IDs or regenerating. Do not apply the baked transform a second
+time in Studio. The routes below remain alternatives
 when preparation is unnecessary or unavailable.
 
 Establish the route when you plan the kit, not after generating (SKILL.md §4):

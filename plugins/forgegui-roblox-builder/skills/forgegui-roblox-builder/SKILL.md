@@ -68,11 +68,13 @@ Rules:
 - Count paid operations across the whole pipeline, not just final assets: include separately generated moving parts and reference images, surface-material tiles and ground-patch templates, remeshing, rigging, animation, and permitted retries. Reserve these calls within the approved ceiling; request an increased total before exceeding it (see `references/3d-assets.md`).
 - Honor authorization already given, including the count it named; do not re-ask while the plan stays within it. Clarify before spending if paid generation was never authorized, no count was given, or the plan has grown past the approved count.
 - Do not assume every tool costs one credit. Provider credentials and account IDs are never tool arguments.
-- Use ForgeGUI for requested custom generation; do not silently substitute another generator after a failure. Use `library_search`, `library_details`, or `toolbox_search` for reuse when available. Keep library IDs, job IDs, artifact references and Roblox asset IDs distinct.
+- Use ForgeGUI for requested custom generation; do not silently substitute another generator after a failure. For reuse, check the account's own earlier outputs first with `generation_list` when the live server exposes it (free, newest first, each job with its `artifact_ref`s); only then use `library_search`, `library_details`, or `toolbox_search` for public catalog or store assets. Keep library IDs, job IDs, artifact references and Roblox asset IDs distinct.
 
 ## 3. Reference before you generate
 
 **Reuse relevant prior artifacts when the live tool supports them.** Do not regenerate an existing asset merely to match the project's style.
+
+- **The user's own earlier work, when `generation_list` is exposed.** When the request names something the user already made ("publish / rig / reuse the X I made yesterday") or the ledger is missing, call `generation_list` before any paid call and before asking the user for IDs. Filter by `tool` (for example `["generation_model_3d"]`), prompt text `query`, `created_after`/`created_before`, `project_id` or `conversation_id`; page with `next_cursor`. Each item's `artifact_ref` values go straight into `artifact_publish`, `generation_rig_3d`, `reference_asset_ids` and the other fields that accept owned references; `preview_url` shows what it looks like and `publication` whether it was already published. It lists ForgeMCP jobs only (not forgegui.com website generations), never charges credits, and omits file URLs: read one job in full with `generation_status`. Record recovered `job_id`/`artifact_ref` values in the ledger. When the tool is absent, do not report its absence as an error.
 
 - Content references: the ledger's `artifact_ref` or owned asset ids for *this object* (the same sword, the same panel family). Pass them in `reference_asset_ids` when that field is supported **and the reference resolves to an image**. A finished `generation_model_3d` artifact is not a usable reference: carry the object forward with its concept image, or repeat the art-direction and material sentence in the prompt.
 - Style references: the project's relevant `style_refs` (a theme pack or hero asset), plus the manifest's `art_direction` words written into the prompt. Do not add unsupported fields.
@@ -101,6 +103,9 @@ must be reconciled, never resubmitted with a new receipt. For ForgeGUI, persist 
 and the exact request in the ledger before submission, then save returned identifiers immediately.
 Reconcile with `generation_status({"job_id": "<saved job UUID>"})` or
 `publication_status({"publication_id": "<saved publication UUID>"})` as applicable.
+When the ledger lost a completed job's `job_id`, recover it with `generation_list` (filter by `tool`,
+`created_after`/`created_before` and prompt `query`) rather than regenerating; it cannot recover a
+`request_id` or a publication UUID.
 The currently exposed status schemas do **not** accept `request_id`; it is an idempotency key,
 not a client status-query key, and `asset_id` is not a substitute for either status UUID.
 If `outcome_unknown` or a lost response leaves neither status UUID, retain the request ID,
