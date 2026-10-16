@@ -5,6 +5,9 @@ permissions support **both the requested asset and destination owner**. Persist 
 request ID before submission; persist job/publication IDs and the asset ID as soon as returned. A timeout or
 `outcome_unknown` requires reconciliation: query `generation_status` with the saved `job_id`
 or `publication_status` with the saved `publication_id`. Neither currently accepts `request_id`.
+A completed job whose `job_id` was lost can be found again with `generation_list` (filter by `tool`,
+`created_after`/`created_before` and prompt `query`); each item carries the `artifact_ref` that
+`artifact_publish` accepts. A lost `request_id` or publication UUID cannot be recovered that way.
 If both status IDs are missing, preserve the request ID and evidence and block for ForgeGUI
 operator recovery of a queryable identifier, as described in SKILL.md §4. Never replay the
 submission, switch routes or create a new request to resolve an ambiguous publication.
